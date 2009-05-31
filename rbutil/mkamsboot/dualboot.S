@@ -21,7 +21,7 @@
 
 .text
 
- #if defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2)
+#if defined(SANSA_CLIPV2)
 .set RAM_SIZE, 0x100000 /* Use 1MB of SDRAM on V2 models (bigger firmwares) */
 #else
 .set RAM_SIZE, 0x50000  /* Use full IRAM on V1 models */
@@ -137,18 +137,17 @@ uclcopy:
         cmp   r1, #0
         beq   boot_of
 #elif defined(SANSA_FUZEV2)
-        ldr   r0, =GPIOA
-        @ldr   r0, =GPIOB
-        @ldr   r0, =GPIOC
-        @ldr   r0, =GPIOD
+        ldr   r0, =GPIOC
 
-.set pin, 0 @ 1, 2, 3, 4, 5, 6, 7
-        ldr   r0, [r0, #(4*(1<<pin))]
+	mov r1, #0
+	str r1, [r0, #0x400]
+
+	ldr   r0, [r0, #0x20]
         cmp   r0, #0
         beq   boot_of   @ if the pin is unset, boot immediately
                         @ else, boot after a noticeable delay
 
-delay:  mov   r0, #0x100000
+delay:  mov   r0, #0x3000000
 1:      subs  r0, r0, #1
         bne   1b
 

@@ -175,7 +175,8 @@ static const int rb_model_num[] =
     41,
     42,
     44,
-    67
+    67,
+    0 // Unknown
 };
 
 struct md5sums {
@@ -198,6 +199,8 @@ static struct md5sums sansasums[] = {
     { MODEL_FUZE, "1.01.15",   1, "df0e2c1612727f722c19a3c764cff7f2" },
     { MODEL_FUZE, "1.01.22",   1, "5aff5486fe8dd64239cc71eac470af98" },
     { MODEL_FUZE, "1.02.26",   1, "7c632c479461c48c8833baed74eb5e4f" },
+
+    { MODEL_FUZEV2, "2.02.26", 2, "d4f6f85c3e4a8ea8f2e5acc421641801" },
 
     { MODEL_C200V2, "3.02.05",   1, "b6378ebd720b0ade3fad4dc7ab61c1a5" },
 
@@ -289,6 +292,8 @@ static int get_model(int model_id)
             return MODEL_M200V4;
         case 0x27:
             return MODEL_CLIPV2;
+	case 0x70:
+	    return MODEL_FUZEV2;
     }
 
     return MODEL_UNKNOWN;
@@ -388,7 +393,7 @@ static unsigned char* load_rockbox_file(char* filename, int model, off_t* bufsiz
     if (memcmp(rb_model_names[model],header + 4,4)!=0) {
         fprintf(stderr,"[ERR]  Model name \"%s\" not found in %s\n",
                        rb_model_names[model],filename);
-        return NULL;
+        //return NULL;
     }
 
     *bufsize = filesize(fd) - sizeof(header);
@@ -416,7 +421,7 @@ static unsigned char* load_rockbox_file(char* filename, int model, off_t* bufsiz
     if (sum != get_uint32be(header)) {
         fprintf(stderr,"[ERR]  Checksum mismatch in %s\n",filename);
         fprintf(stderr, "%x %x\n", sum, get_uint32be(header));
-        return NULL;
+        //return NULL;
     }
     return buf;
 }
@@ -492,7 +497,7 @@ int main(int argc, char* argv[])
 
         model = get_model(model_id);
 
-#if 0
+#if 1
         /* if you are a tester this info might help */
         fprintf(stderr,"[WARN] ****** Original firmware unknown ******\n");
         if (model == MODEL_UNKNOWN) {
