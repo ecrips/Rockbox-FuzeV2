@@ -59,6 +59,7 @@ newstart:
 
 #if CONFIG_CPU==AS3525 && !defined(BOOTLOADER)
 
+#ifndef SANSA_CLIPV2
     /* relocate vectors */
     mov     r1, #0              @ destination
     ldr     r2, =_vectorscopy   @ source
@@ -68,6 +69,7 @@ newstart:
     str     r0, [r1], #4
     cmp     r1, r3
     bne     1b
+#endif  /* SANSA_CLIPV2 */
 
     /* Zero out IBSS */
     ldr     r2, =_iedata
@@ -97,7 +99,7 @@ newstart:
     cmp     r3, r2
     strhi   r4, [r2], #4
     bhi     1b
-    
+
     /* Set up some stack and munge it with 0xdeadbeef */
     ldr     sp, =stackend
     ldr     r2, =stackbegin
@@ -106,12 +108,12 @@ newstart:
     cmp     sp, r2
     strhi   r3, [r2], #4
     bhi     1b
-    
-    /* Set up stack for IRQ mode */ 
+
+    /* Set up stack for IRQ mode */
     msr     cpsr_c, #0xd2
     ldr     sp, =irq_stack
 
-    /* Set up stack for FIQ mode */ 
+    /* Set up stack for FIQ mode */
     msr     cpsr_c, #0xd1
     ldr     sp, =fiq_stack
 
@@ -148,7 +150,7 @@ prefetch_abort_handler:
     b      UIE
 
 data_abort_handler:
-    sub    r0, lr, #8 
+    sub    r0, lr, #8
     mov    r1, #2
     b      UIE
 

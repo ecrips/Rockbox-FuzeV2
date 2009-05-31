@@ -1,11 +1,11 @@
 /*
- * This config file is for the Sandisk Sansa Clip
+ * This config file is for the Sandisk Sansa Clip v2
  */
 #define TARGET_TREE /* this target is using the target tree system */
 
 /* For Rolo and boot loader */
-#define MODEL_NUMBER 40
-#define MODEL_NAME   "Sandisk Sansa Clip"
+#define MODEL_NUMBER 66
+#define MODEL_NAME   "Sandisk Sansa Clipv2"
 #define FIRMWARE_OFFSET_FILE_DATA 8
 #define FIRMWARE_OFFSET_FILE_CRC 0
 
@@ -114,10 +114,10 @@
 #define HAVE_FAT16SUPPORT
 
 /* The number of bytes reserved for loadable codecs */
-#define CODEC_SIZE 0x48000  /* in IRAM */
+#define CODEC_SIZE 0x100000
 
 /* The number of bytes reserved for loadable plugins */
-#define PLUGIN_BUFFER_SIZE 0x60000
+#define PLUGIN_BUFFER_SIZE 0x80000
 
 #define AB_REPEAT_ENABLE 1
 
@@ -134,9 +134,9 @@
 /* define this if the flash memory uses the SecureDigital Memory Card protocol */
 #define CONFIG_STORAGE STORAGE_SD
 
-#define BATTERY_CAPACITY_DEFAULT 350    /* default battery capacity */
-#define BATTERY_CAPACITY_MIN 350        /* min. capacity selectable */
-#define BATTERY_CAPACITY_MAX 350        /* max. capacity selectable */
+#define BATTERY_CAPACITY_DEFAULT 380    /* default battery capacity */
+#define BATTERY_CAPACITY_MIN 380        /* min. capacity selectable */
+#define BATTERY_CAPACITY_MAX 380        /* max. capacity selectable */
 #define BATTERY_CAPACITY_INC 0          /* capacity increment */
 #define BATTERY_TYPES_COUNT  1          /* only one type */
 
@@ -150,10 +150,7 @@
 #ifndef SIMULATOR
 
 /* Define this if you have a AMS AS3525 SoC */
-#define CONFIG_CPU AS3525
-
-/* Define how much SD sectors are reserved for OF */
-#define AMS_OF_SIZE 0x5000
+#define CONFIG_CPU AS3525   /* FIXME: AS3531? */
 
 /* Define this if you want to use the AS3525 i2c interface */
 #define CONFIG_I2C I2C_AS3525

@@ -356,6 +356,8 @@ Lyre prototype 1*/
 #include "config-ondavx767.h"
 #elif defined(SANSA_CLIP)
 #include "config-clip.h"
+#elif defined(SANSA_CLIPV2)
+#include "config-clipv2.h"
 #elif defined(SANSA_E200V2)
 #include "config-e200v2.h"
 #elif defined(SANSA_M200V4)
@@ -595,15 +597,13 @@ Lyre prototype 1*/
 #if (CONFIG_CPU == IMX31L)
 #define CPU_ARM
 #define ARM_ARCH 6 /* ARMv6 */
-#endif
 
-#if defined(CPU_TCC77X) || defined(CPU_TCC780X) || (CONFIG_CPU == DM320) \
-  || (CONFIG_CPU == AT91SAM9260)
+#elif defined(CPU_TCC77X) || defined(CPU_TCC780X) || (CONFIG_CPU == DM320) \
+  || (CONFIG_CPU == AT91SAM9260) || defined(SANSA_CLIPV2)
 #define CPU_ARM
 #define ARM_ARCH 5 /* ARMv5 */
-#endif
 
-#if defined(CPU_PP) || (CONFIG_CPU == PNX0101) || (CONFIG_CPU == S3C2440) \
+#elif defined(CPU_PP) || (CONFIG_CPU == PNX0101) || (CONFIG_CPU == S3C2440) \
   || (CONFIG_CPU == DSC25) || (CONFIG_CPU == S5L8700) || (CONFIG_CPU == AS3525)
 #define CPU_ARM
 #define ARM_ARCH 4 /* ARMv4 */

@@ -46,6 +46,7 @@ ondavx747.c
 #elif defined(CREATIVE_ZVx)
 creativezvm.c
 #elif CONFIG_CPU==AS3525
+morpion.c
 sansa_as3525.c
 show_logo.c
 #elif defined(LYRE_PROTO1)

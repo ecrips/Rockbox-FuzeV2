@@ -21,7 +21,11 @@
 
 .text
 
-.set IRAM_SIZE, 0x50000
+ #if defined(SANSA_CLIPV2)
+.set RAM_SIZE, 0x100000 /* Use 1MB of SDRAM on V2 models (bigger firmwares) */
+#else
+.set RAM_SIZE, 0x50000  /* Use full IRAM on V1 models */
+#endif
 
 .set GPIOA,     0xC80B0000
 .set GPIOB,     0xC80C0000
@@ -57,7 +61,7 @@ start:
         ldr   r1, uclunpack_size    /* Source length */
         sub   r2, r0, r1            /* Source start - 1*/
 
-        ldr   r3, =(IRAM_SIZE-1)    /* Destination end */
+        ldr   r3, =(RAM_SIZE-1)    /* Destination end */
 
 uclcopy:
         ldrb  r4, [r0], #-1
@@ -85,7 +89,7 @@ uclcopy:
         str   r1, [r0, #0x400]
 #ifdef SANSA_C200V2
         ldr   r1, [r0, #0x8]    /* USB is A1 on C200 */
-#elif defined(SANSA_CLIP)
+#elif defined(SANSA_CLIP) || defined(SANSA_CLIPV2)
         ldr   r1, [r0, #0x100]    /* USB is A6 on Clip */
 #else
         ldr   r1, [r0, #0x20]    /* read pin A3 */
@@ -112,6 +116,26 @@ uclcopy:
 
         cmp   r1, #0
         bne   boot_of
+#elif defined(SANSA_CLIPV2)
+        /* HOME button */
+.set row, (1<<6) /* enable output on D6 */
+        ldr   r0, =GPIOD
+        mov   r1, #((1<<6)|(1<<5)|(1<<4))
+        str   r1, [r0, #0x400]
+
+        mov   r1, #0            @ zero all rows first
+        str   r1, [r0, #(4*(1<<4))]
+        str   r1, [r0, #(4*(1<<5))]
+        str   r1, [r0, #(4*(1<<6))]
+
+        mov   r1, #row
+        str   r1, [r0, #(4*row)]
+
+.set col, (1<<2) /* read keyscan column D2 */
+        ldr   r1, [r0, #(4*col)]
+
+        cmp   r1, #0
+        beq   boot_of
 #elif defined(SANSA_E200V2) || defined(SANSA_FUZE)
         /* LEFT button */
         ldr   r0, =GPIOC

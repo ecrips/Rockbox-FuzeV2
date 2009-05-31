@@ -757,6 +757,9 @@ cat <<EOF
  140) YH-820              112) M3
  141) YH-920
  142) YH-925
+
+ ==Sansa AMS v2==
+ 150) Clipv2
 EOF
 
   buildfor=`input`;
@@ -1737,6 +1740,26 @@ fi
     t_model="sansa-clip"
     ;;
 
+   150|Clipv2|clipv2)
+    target_id=66
+    modelname="clipv2"
+    target="-DSANSA_CLIPV2"
+    memory=8
+    arm926ejscc
+    bmp2rb_mono="$rootdir/tools/bmp2rb -f 0"
+    bmp2rb_native="$bmp2rb_mono"
+    tool="$rootdir/tools/scramble -add=clv2"
+    output="rockbox.sansa"
+    bootoutput="bootloader-clipv2.sansa"
+    appextra="recorder:gui"
+    plugins="yes"
+    swcodec="yes"
+    toolset=$scramblebitmaptools
+    t_cpu="arm"
+    t_manufacturer="as3525"
+    t_model="sansa-clipv2"
+    ;;
+
 
    56|e200v2)
     target_id=51
@@ -1757,7 +1780,6 @@ fi
     t_manufacturer="as3525"
     t_model="sansa-e200v2"
     ;;
-
 
    57|m200v4)
     target_id=52

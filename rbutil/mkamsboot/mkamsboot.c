@@ -50,9 +50,10 @@ as follows:
 
 This entire block fits into the space previously occupied by the main
 firmware block - the space saved by compressing the OF image is used
-to store the compressed version of the Rockbox bootloader.  The OF
-image is typically about 120KB, which allows us to store a Rockbox
-bootloader with an uncompressed size of about 60KB-70KB.
+to store the compressed version of the Rockbox bootloader.  On version 1
+firmwares, The OF image is typically about 120KB, which allows us to
+store a Rockbox bootloader with an uncompressed size of about 60KB-70KB.
+Version 2 firmwares are bigger and are stored in SDRAM (instead of IRAM).
 
 mkamsboot then corrects the checksums and writes a new legal firmware
 file which can be installed on the device.
@@ -90,6 +91,7 @@ execution to the uncompressed firmware.
 #include "md5.h"
 
 #include "dualboot_clip.h"
+#include "dualboot_clipv2.h"
 #include "dualboot_e200v2.h"
 #include "dualboot_fuze.h"
 #include "dualboot_m200v4.h"
@@ -129,7 +131,7 @@ static const unsigned char* bootloaders[] =
 {
     dualboot_fuze,
     dualboot_clip,
-    NULL,
+    dualboot_clipv2,
     dualboot_e200v2,
     dualboot_m200v4,
     dualboot_c200v2,
@@ -139,7 +141,7 @@ static const int bootloader_sizes[] =
 {
     sizeof(dualboot_fuze),
     sizeof(dualboot_clip),
-    0,
+    sizeof(dualboot_clipv2),
     sizeof(dualboot_e200v2),
     sizeof(dualboot_m200v4),
     sizeof(dualboot_c200v2),
@@ -151,7 +153,7 @@ static const char* rb_model_names[] =
 {
     "fuze",
     "clip",
-    NULL,
+    "clv2",
     "e2v2",
     "m2v4",
     "c2v2",
@@ -163,7 +165,7 @@ static const int rb_model_num[] =
 {
     43,
     40,
-    0,
+    66,
     41,
     42,
     44
@@ -202,6 +204,9 @@ static struct md5sums sansasums[] = {
     { MODEL_CLIP, "1.01.29",   1, "c12711342169c66e209540cd1f27cd26" },
     { MODEL_CLIP, "1.01.30",   1, "f2974d47c536549c9d8259170f1dbe4d" },
     { MODEL_CLIP, "1.01.32",   1, "d835d12342500732ffb9c4ee54abec15" },
+
+    { MODEL_CLIPV2, "2.01.16", 2, "c57fb3fcbe07c2c9b360f060938f80cb" },
+    { MODEL_CLIPV2, "2.01.32", 2, "0ad3723e52022509089d938d0fbbf8c5" }
 };
 
 #define NUM_MD5S (sizeof(sansasums)/sizeof(sansasums[0]))
@@ -403,6 +408,7 @@ static unsigned char* load_rockbox_file(char* filename, int model, off_t* bufsiz
 
     if (sum != get_uint32be(header)) {
         fprintf(stderr,"[ERR]  Checksum mismatch in %s\n",filename);
+        fprintf(stderr, "%x %x\n", sum, get_uint32be(header));
         return NULL;
     }
     return buf;
@@ -524,7 +530,10 @@ int main(int argc, char* argv[])
     printf("[INFO] Patching %s firmware\n",model_names[model]);
 
     /* Get the firmware size */
-    firmware_size = get_uint32le(&buf[0x0c]);
+    if (fw_version == 1)
+        firmware_size = get_uint32le(&buf[0x0c]);
+    else
+        firmware_size = get_uint32le(&buf[0x10]);
 
     /* Compress the original firmware image */
     of_packed = uclpack(buf + 0x400, firmware_size, &of_packedsize);
@@ -562,7 +571,6 @@ int main(int argc, char* argv[])
     if (totalsize > firmware_size) {
         fprintf(stderr,"[ERR]  No room to insert bootloader, aborting\n");
         free(buf);
-        free(rb_unpacked);
         free(of_packed);
         return 1;
     }
@@ -613,8 +621,6 @@ int main(int argc, char* argv[])
         put_uint32le(&buf[0x04], sum);
         put_uint32le(&buf[0x204], sum);
     } else {
-        /* TODO: Verify that this is correct for the v2 firmware */
-
         put_uint32le(&buf[0x08], sum);
         put_uint32le(&buf[0x208], sum);
 

@@ -35,7 +35,11 @@
 #include "panic.h"
 #include "power.h"
 
+#include "power.h"
+
+void morpion(void);
 int show_logo(void);
+void main(void) __attribute__((noreturn));
 void main(void)
 {
     unsigned char* loadbuffer;
@@ -50,12 +54,14 @@ void main(void)
     /* stop here */
     while(1);
 #endif
+
     lcd_init();
     show_logo();
 
     _backlight_on();
 
     button_init_device();
+#ifndef SANSA_CLIPV2
     int btn = button_read_device();
 
 #if !defined(SANSA_FUZE) && !defined(SANSA_CLIP)
@@ -76,15 +82,37 @@ void main(void)
         lcd_clear_display();
         verbose = true;
     }
+#else
+    verbose = true;
 
     enable_irq();
+
+    lcd_puts(0, 0, "SELECT = tic tac toe");
+    lcd_puts(0, 1, "OTHER  = continue");
+    lcd_update();
+
+    int btn;
+    while(!(btn = button_read_device())) ;
+    lcd_clear_display();
+    if(btn & BUTTON_SELECT)
+    {
+        lcd_update();
+        sleep(HZ/2);
+        morpion();
+        power_off();
+    }
+    else
+        show_logo();
+
+    while(button_read_device());
+#endif
 
     ret = storage_init();
     if(ret < 0)
         error(EATA,ret);
 
     if(!disk_init(IF_MV(0)))
-        panicf("disk_init failed!");
+        panicf("disk_init() failed!");
 
     ret = disk_mount_all();
 

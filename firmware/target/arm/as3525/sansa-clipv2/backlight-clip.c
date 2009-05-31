@@ -7,7 +7,7 @@
  *                     \/            \/     \/    \/            \/
  * $Id$
  *
- * Copyright © 2008 Rafaël Carré
+ * Copyright © 2009 Rafaël Carré
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,24 +19,33 @@
  *
  ****************************************************************************/
 
-#include <stdbool.h>
-#include <stdlib.h>
+#include "backlight-target.h"
+#include "lcd.h"
+#include "as3525.h"
+#include "ascodec-target.h"
 
-/* DMA request lines (16 max): not specified in AS3525 datasheet, but common to
- * all AS3525 based models (made by SanDisk) supported by rockbox. */
+void _backlight_on(void)
+{
+    ascodec_write(0x25, ascodec_read(0x25) | 2);    /* lcd power */
+    ascodec_write(0x1c, 8|1);
+    ascodec_write(0x1b, 0x90);
+    lcd_enable(true);
+}
 
-#define DMA_PERI_SD_SLOT    2
-#define DMA_PERI_I2SOUT     3
-#define DMA_PERI_I2SIN      4
-#define DMA_PERI_SD         5   /* embedded storage */
-#define DMA_PERI_DBOP       8
+void _backlight_off(void)
+{
+    ascodec_write(0x25, ascodec_read(0x25) & ~2);    /* lcd power */
+    lcd_enable(false);
+}
 
-void dma_init(void);
-void dma_enable_channel(int channel, void *src, void *dst, int peri,
-                        int flow_controller, bool src_inc, bool dst_inc,
-                        size_t size, int nwords, void (*callback)(void));
-inline void dma_disable_channel(int channel);
+void _buttonlight_on(void)
+{
+    GPIOA_DIR |= (1<<5);
+    GPIOA_PIN(5) = (1<<5);  /* set pin a5 high */
+}
 
-void dma_retain(void);
-void dma_release(void);
-void dma_wait(int channel);
+void _buttonlight_off(void)
+{
+    GPIOA_DIR |= (1<<5);
+    GPIOA_PIN(5) = 0;       /* set pin a5 low */
+}

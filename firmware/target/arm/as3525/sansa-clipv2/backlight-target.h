@@ -7,7 +7,7 @@
  *                     \/            \/     \/    \/            \/
  * $Id$
  *
- * Copyright © 2008 Rafaël Carré
+ * Copyright © 2009 Rafaël Carré
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,25 +18,15 @@
  * KIND, either express or implied.
  *
  ****************************************************************************/
+#ifndef BACKLIGHT_TARGET_H
+#define BACKLIGHT_TARGET_H
 
-#include <stdbool.h>
-#include <stdlib.h>
+#define _backlight_init() true
 
-/* DMA request lines (16 max): not specified in AS3525 datasheet, but common to
- * all AS3525 based models (made by SanDisk) supported by rockbox. */
+void _backlight_on(void);
+void _backlight_off(void);
 
-#define DMA_PERI_SD_SLOT    2
-#define DMA_PERI_I2SOUT     3
-#define DMA_PERI_I2SIN      4
-#define DMA_PERI_SD         5   /* embedded storage */
-#define DMA_PERI_DBOP       8
+void _buttonlight_on(void);
+void _buttonlight_off(void);
 
-void dma_init(void);
-void dma_enable_channel(int channel, void *src, void *dst, int peri,
-                        int flow_controller, bool src_inc, bool dst_inc,
-                        size_t size, int nwords, void (*callback)(void));
-inline void dma_disable_channel(int channel);
-
-void dma_retain(void);
-void dma_release(void);
-void dma_wait(int channel);
+#endif

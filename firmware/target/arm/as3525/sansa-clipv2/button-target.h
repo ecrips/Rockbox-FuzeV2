@@ -7,7 +7,7 @@
  *                     \/            \/     \/    \/            \/
  * $Id$
  *
- * Copyright © 2008 Rafaël Carré
+ * Copyright (C) 2008 François Dinel
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,24 +19,41 @@
  *
  ****************************************************************************/
 
+#ifndef _BUTTON_TARGET_H_
+#define _BUTTON_TARGET_H_
+
 #include <stdbool.h>
-#include <stdlib.h>
+#include "config.h"
 
-/* DMA request lines (16 max): not specified in AS3525 datasheet, but common to
- * all AS3525 based models (made by SanDisk) supported by rockbox. */
+#define HAS_BUTTON_HOLD
 
-#define DMA_PERI_SD_SLOT    2
-#define DMA_PERI_I2SOUT     3
-#define DMA_PERI_I2SIN      4
-#define DMA_PERI_SD         5   /* embedded storage */
-#define DMA_PERI_DBOP       8
+void button_init_device(void);
+int button_read_device(void);
+bool button_hold(void);
 
-void dma_init(void);
-void dma_enable_channel(int channel, void *src, void *dst, int peri,
-                        int flow_controller, bool src_inc, bool dst_inc,
-                        size_t size, int nwords, void (*callback)(void));
-inline void dma_disable_channel(int channel);
+/* Main unit's buttons */
+#define BUTTON_HOME         0x00000001
 
-void dma_retain(void);
-void dma_release(void);
-void dma_wait(int channel);
+#define BUTTON_VOL_UP       0x00000002
+#define BUTTON_VOL_DOWN     0x00000004
+
+#define BUTTON_UP           0x00000008
+#define BUTTON_DOWN         0x00000010
+#define BUTTON_LEFT         0x00000020
+#define BUTTON_RIGHT        0x00000040
+
+#define BUTTON_SELECT       0x00000080
+
+#define BUTTON_POWER        0x00000100
+
+#define BUTTON_MAIN (BUTTON_HOME|BUTTON_VOL_UP|BUTTON_VOL_DOWN\
+                    |BUTTON_UP|BUTTON_DOWN|BUTTON_LEFT|BUTTON_RIGHT\
+                    |BUTTON_SELECT|BUTTON_POWER)
+
+#define BUTTON_REMOTE 0
+
+/* Software power-off */
+#define POWEROFF_BUTTON BUTTON_POWER
+#define POWEROFF_COUNT 10
+
+#endif /* _BUTTON_TARGET_H_ */

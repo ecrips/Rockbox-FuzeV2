@@ -19,24 +19,32 @@
  *
  ****************************************************************************/
 
-#include <stdbool.h>
-#include <stdlib.h>
+#include "config.h"
 
-/* DMA request lines (16 max): not specified in AS3525 datasheet, but common to
- * all AS3525 based models (made by SanDisk) supported by rockbox. */
+/* The battery manufacturer's website shows discharge curves down to 3.0V,
+   so 'dangerous' and 'shutoff' levels of 3.4V and 3.3V should be safe.
+ */
+const unsigned short battery_level_dangerous[BATTERY_TYPES_COUNT] =
+{
+    3400
+};
 
-#define DMA_PERI_SD_SLOT    2
-#define DMA_PERI_I2SOUT     3
-#define DMA_PERI_I2SIN      4
-#define DMA_PERI_SD         5   /* embedded storage */
-#define DMA_PERI_DBOP       8
+const unsigned short battery_level_shutoff[BATTERY_TYPES_COUNT] =
+{
+    3300
+};
 
-void dma_init(void);
-void dma_enable_channel(int channel, void *src, void *dst, int peri,
-                        int flow_controller, bool src_inc, bool dst_inc,
-                        size_t size, int nwords, void (*callback)(void));
-inline void dma_disable_channel(int channel);
+/* voltages (millivolt) of 0%, 10%, ... 100% when charging disabled */
+const unsigned short percent_to_volt_discharge[BATTERY_TYPES_COUNT][11] =
+{
+    { 3300, 3653, 3701, 3735, 3768, 3790, 3833, 3900, 3966, 4056, 4140 }
+};
 
-void dma_retain(void);
-void dma_release(void);
-void dma_wait(int channel);
+#if CONFIG_CHARGING
+/* voltages (millivolt) of 0%, 10%, ... 100% when charging enabled */
+const unsigned short percent_to_volt_charge[11] =
+{
+    /* TODO: simple linear uncalibrated curve */
+    3300, 3390, 3480, 3570, 3660, 3750, 3840, 3930, 4020, 4110, 4200
+};
+#endif /* CONFIG_CHARGING */

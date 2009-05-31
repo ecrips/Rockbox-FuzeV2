@@ -24,9 +24,19 @@
 #include "pl081.h"
 #include "dma-target.h"
 #include "panic.h"
+#include "kernel.h"
 
 static int dma_used = 0;
 static void (*dma_callback[2])(void); /* 2 channels */
+static struct wakeup wait_transfer;
+
+void dma_wait(int channel)
+{
+    if(channel != 0)
+        panicf("dma_wait : only ata");
+
+    wakeup_wait(&wait_transfer, TIMEOUT_BLOCK);
+}
 
 void dma_retain(void)
 {
@@ -50,6 +60,8 @@ void dma_init(void)
 {
     DMAC_SYNC = 0xffff; /* disable synchronisation logic */
     VIC_INT_ENABLE |= INTERRUPT_DMAC;
+
+    wakeup_init(&wait_transfer);
 }
 
 inline void dma_disable_channel(int channel)
@@ -117,5 +129,8 @@ void INT_DMAC(void)
 
             if(dma_callback[channel])
                 dma_callback[channel]();
+
+            if(channel == 0)
+                wakeup_signal(&wait_transfer);
         }
 }

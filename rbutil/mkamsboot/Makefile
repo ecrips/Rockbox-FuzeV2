@@ -8,10 +8,12 @@ LIBUCL=../../tools/ucl/src/libucl.a
 # adding a new target.  mkamsboot.c also needs to be edited to refer to these
 # new images.
 
-BOOTIMAGES = dualboot_clip.o dualboot_e200v2.o dualboot_c200v2.o dualboot_m200v4.o dualboot_fuze.o
-BOOTHEADERS = dualboot_clip.h dualboot_e200v2.h dualboot_c200v2.h dualboot_m200v4.h dualboot_fuze.h
+BOOTIMAGES = dualboot_clip.o dualboot_e200v2.o dualboot_c200v2.o dualboot_m200v4.o dualboot_fuze.o dualboot_clipv2.o
+BOOTHEADERS = dualboot_clip.h dualboot_e200v2.h dualboot_c200v2.h dualboot_m200v4.h dualboot_fuze.h dualboot_clipv2.h
 
 CLIPFILES = dualboot_clip.arm-o dualboot_clip.o dualboot_clip.c dualboot_clip.h
+
+CLIPV2FILES = dualboot_clipv2.arm-o dualboot_clipv2.o dualboot_clipv2.c dualboot_clipv2.h
 
 E200V2FILES = dualboot_e200v2.arm-o dualboot_e200v2.o dualboot_e200v2.c \
               dualboot_e200v2.h
@@ -30,6 +32,9 @@ all: mkamsboot
 
 dualboot_clip.arm-o: dualboot.S
 	arm-elf-gcc -DSANSA_CLIP -c -o dualboot_clip.arm-o dualboot.S
+
+dualboot_clipv2.arm-o: dualboot.S
+	arm-elf-gcc -DSANSA_CLIPV2 -c -o dualboot_clipv2.arm-o dualboot.S
 
 dualboot_fuze.arm-o: dualboot.S
 	arm-elf-gcc -DSANSA_FUZE -c -o dualboot_fuze.arm-o dualboot.S
@@ -87,4 +92,4 @@ clean:
 	rm -f mkamsboot mkamsboot.o nrv2e_d8.arm-o nrv2e_d8.arm-elf \
 	nrv2e_d8.arm-bin *~ bin2c nrv2e_d8.c nrv2e_d8.h nrv2e_d8.o md5.o \
 	$(BOOTIMAGES) $(CLIPFILES) $(E200V2FILES) $(M200V4FILES) $(FUZEFILES) \
-	$(C200V2FILES)
+	$(C200V2FILES) $(CLIPV2FILES)

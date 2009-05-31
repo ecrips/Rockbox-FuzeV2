@@ -7,7 +7,8 @@
  *                     \/            \/     \/    \/            \/
  * $Id$
  *
- * Copyright © 2008 Rafaël Carré
+ * Copyright (C) 2009 by Michael Sevakis
+ * Copyright (C) 2008 by Bertrik Sikken
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,25 +19,24 @@
  * KIND, either express or implied.
  *
  ****************************************************************************/
+#ifndef POWERMGMT_TARGET_H
+#define POWERMGMT_TARGET_H
 
-#include <stdbool.h>
-#include <stdlib.h>
+/* Check if topped-off and monitor voltage while plugged. */
+#define BATT_FULL_VOLTAGE   4160
+#define BATT_VAUTO_RECHARGE 4100
+#define BATT_CHG_V          CHG_V_4_20V
+#define BATT_CHG_I          CHG_I_100MA
+#define CHARGER_TOTAL_TIMER (6*3600*2)  /* about 1.5 * capacity / current */
+#define ADC_BATTERY         ADC_BVDD
 
-/* DMA request lines (16 max): not specified in AS3525 datasheet, but common to
- * all AS3525 based models (made by SanDisk) supported by rockbox. */
+void powermgmt_init_target(void);
+void charging_algorithm_step(void);
+void charging_algorithm_close(void);
 
-#define DMA_PERI_SD_SLOT    2
-#define DMA_PERI_I2SOUT     3
-#define DMA_PERI_I2SIN      4
-#define DMA_PERI_SD         5   /* embedded storage */
-#define DMA_PERI_DBOP       8
+/* We want to be able to reset the averaging filter */
+#define HAVE_RESET_BATTERY_FILTER
 
-void dma_init(void);
-void dma_enable_channel(int channel, void *src, void *dst, int peri,
-                        int flow_controller, bool src_inc, bool dst_inc,
-                        size_t size, int nwords, void (*callback)(void));
-inline void dma_disable_channel(int channel);
+#define BATT_AVE_SAMPLES 32
 
-void dma_retain(void);
-void dma_release(void);
-void dma_wait(int channel);
+#endif /*  POWERMGMT_TARGET_H */
