@@ -96,6 +96,7 @@ execution to the uncompressed firmware.
 #include "dualboot_fuze.h"
 #include "dualboot_m200v4.h"
 #include "dualboot_c200v2.h"
+#include "dualboot_fuzev2.h"
 
 /* Win32 compatibility */
 #ifndef O_BINARY
@@ -115,6 +116,7 @@ enum
     MODEL_E200V2,
     MODEL_M200V4,
     MODEL_C200V2,
+    MODEL_FUZEV2,
 };
 
 static const char* model_names[] = 
@@ -124,7 +126,8 @@ static const char* model_names[] =
     "Clip V2",
     "e200 v2",
     "m200 v4",
-    "c200 v2"
+    "c200 v2",
+    "Fuze v2"
 };
 
 static const unsigned char* bootloaders[] = 
@@ -135,6 +138,7 @@ static const unsigned char* bootloaders[] =
     dualboot_e200v2,
     dualboot_m200v4,
     dualboot_c200v2,
+    dualboot_fuzev2,
 };
 
 static const int bootloader_sizes[] = 
@@ -145,6 +149,7 @@ static const int bootloader_sizes[] =
     sizeof(dualboot_e200v2),
     sizeof(dualboot_m200v4),
     sizeof(dualboot_c200v2),
+    sizeof(dualboot_fuzev2),
 };
 
 /* Model names used in the Rockbox header in ".sansa" files - these match the
@@ -157,6 +162,7 @@ static const char* rb_model_names[] =
     "e2v2",
     "m2v4",
     "c2v2",
+    "fuz2",
 };
 
 /* Model numbers used to initialise the checksum in the Rockbox header in
@@ -168,7 +174,8 @@ static const int rb_model_num[] =
     66,
     41,
     42,
-    44
+    44,
+    67
 };
 
 struct md5sums {
