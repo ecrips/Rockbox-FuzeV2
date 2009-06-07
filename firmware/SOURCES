@@ -1166,6 +1166,9 @@ target/arm/as3525/sansa-m200v4/powermgmt-m200v4.c
 #endif /* SANSA_M200V4 */
 
 #if defined(SANSA_FUZE) || defined(SANSA_FUZEV2)
+#ifdef SANSA_FUZEV2
+target/arm/as3525/sansa-clipv2/ata-clipv2.c
+#endif
 #ifndef SIMULATOR
 target/arm/as3525/sansa-fuze/button-fuze.c
 target/arm/as3525/sansa-fuze/lcd-fuze.c
