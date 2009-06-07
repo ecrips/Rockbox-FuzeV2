@@ -364,6 +364,8 @@ Lyre prototype 1*/
 #include "config-m200v4.h"
 #elif defined(SANSA_FUZE)
 #include "config-fuze.h"
+#elif defined(SANSA_FUZEV2)
+#include "config-fuzev2.h"
 #elif defined(SANSA_C200V2)
 #include "config-c200v2.h"
 #elif defined(LYRE_PROTO1)

@@ -59,7 +59,7 @@ newstart:
 
 #if CONFIG_CPU==AS3525 && !defined(BOOTLOADER)
 
-#ifndef SANSA_CLIPV2
+#if !(defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2))
     /* relocate vectors */
     mov     r1, #0              @ destination
     ldr     r2, =_vectorscopy   @ source

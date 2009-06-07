@@ -123,7 +123,7 @@ void usage(void)
            "\t                   ip3g, ip4g, mini, iax5, iam5, iam3, h10, h10_5gb,\n"
            "\t                   tpj2, c200, e200, giga, gigs, m100, m500, d2,\n");
     printf("\t                   9200, 1630, ldax, m200, clip, e2v2, m2v4, fuze,\n"
-           "\t                   y820, y920, y925, clv2)\n");
+           "\t                   y820, y920, y925, clv2, fuz2)\n");
     printf("\nNo option results in Archos standard player/recorder format.\n");
 
     exit(1);
@@ -306,6 +306,8 @@ int main (int argc, char** argv)
             modelnum = 59;
         else if (!strcmp(&argv[1][5], "clv2")) /* Sansa Clip v2 */
             modelnum = 66;
+        else if (!strcmp(&argv[1][5], "fuz2")) /* Sansa Fuze v2 */
+            modelnum = 67;
         else {
             fprintf(stderr, "unsupported model: %s\n", &argv[1][5]);
             return 2;

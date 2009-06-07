@@ -366,7 +366,7 @@ target/arm/pnx0101/system-pnx0101.c
 #if CONFIG_CPU == AS3525
 target/arm/as3525/system-as3525.c
 target/arm/as3525/kernel-as3525.c
-#ifndef SANSA_CLIPV2
+#if !(defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2))
 target/arm/as3525/ata_sd_as3525.c
 #endif
 target/arm/as3525/power-as3525.c
@@ -1165,7 +1165,7 @@ target/arm/as3525/sansa-m200v4/powermgmt-m200v4.c
 #endif /* !SIMULATOR */
 #endif /* SANSA_M200V4 */
 
-#ifdef SANSA_FUZE
+#if defined(SANSA_FUZE) || defined(SANSA_FUZEV2)
 #ifndef SIMULATOR
 target/arm/as3525/sansa-fuze/button-fuze.c
 target/arm/as3525/sansa-fuze/lcd-fuze.c

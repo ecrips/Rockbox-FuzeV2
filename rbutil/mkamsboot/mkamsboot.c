@@ -175,8 +175,7 @@ static const int rb_model_num[] =
     41,
     42,
     44,
-    67,
-    0 // Unknown
+    67
 };
 
 struct md5sums {
@@ -393,7 +392,7 @@ static unsigned char* load_rockbox_file(char* filename, int model, off_t* bufsiz
     if (memcmp(rb_model_names[model],header + 4,4)!=0) {
         fprintf(stderr,"[ERR]  Model name \"%s\" not found in %s\n",
                        rb_model_names[model],filename);
-        //return NULL;
+        return NULL;
     }
 
     *bufsize = filesize(fd) - sizeof(header);
@@ -421,7 +420,7 @@ static unsigned char* load_rockbox_file(char* filename, int model, off_t* bufsiz
     if (sum != get_uint32be(header)) {
         fprintf(stderr,"[ERR]  Checksum mismatch in %s\n",filename);
         fprintf(stderr, "%x %x\n", sum, get_uint32be(header));
-        //return NULL;
+        return NULL;
     }
     return buf;
 }

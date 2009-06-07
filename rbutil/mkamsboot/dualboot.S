@@ -136,23 +136,7 @@ uclcopy:
 
         cmp   r1, #0
         beq   boot_of
-#elif defined(SANSA_FUZEV2)
-        ldr   r0, =GPIOC
-
-	mov r1, #0
-	str r1, [r0, #0x400]
-
-	ldr   r0, [r0, #0x20]
-        cmp   r0, #0
-        beq   boot_of   @ if the pin is unset, boot immediately
-                        @ else, boot after a noticeable delay
-
-delay:  mov   r0, #0x3000000
-1:      subs  r0, r0, #1
-        bne   1b
-
-        b     boot_of
-#elif defined(SANSA_E200V2) || defined(SANSA_FUZE)
+#elif defined(SANSA_E200V2) || defined(SANSA_FUZE) || defined(SANSA_FUZEV2)
         /* LEFT button */
         ldr   r0, =GPIOC
         mov   r1, #0

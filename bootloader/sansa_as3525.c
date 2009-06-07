@@ -61,7 +61,7 @@ void main(void)
     _backlight_on();
 
     button_init_device();
-#ifndef SANSA_CLIPV2
+#if !(defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2))
     int btn = button_read_device();
 
 #if !defined(SANSA_FUZE) && !defined(SANSA_CLIP)

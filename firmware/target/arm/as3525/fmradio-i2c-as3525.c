@@ -49,7 +49,7 @@
 #define I2C_SCL_PIN 7
 #define I2C_SDA_PIN 6
 
-#elif   defined(SANSA_FUZE) || defined(SANSA_E200V2)
+#elif   defined(SANSA_FUZE) || defined(SANSA_E200V2) || defined(SANSA_FUZEV2)
 #define I2C_GPIO(x) GPIOA_PIN(x)
 #define I2C_GPIO_DIR GPIOA_DIR
 #define I2C_SCL_PIN 6

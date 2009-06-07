@@ -760,6 +760,7 @@ cat <<EOF
 
  ==Sansa AMS v2==
  150) Clipv2
+ 151) Fuzev2
 EOF
 
   buildfor=`input`;
@@ -1822,6 +1823,25 @@ fi
     t_model="sansa-fuze"
     ;;
 
+   151|fuzev2)
+    target_id=67
+    modelname="fuzev2"
+    target="-DSANSA_FUZEV2"
+    memory=8
+    arm926ejscc
+    bmp2rb_mono="$rootdir/tools/bmp2rb -f 0"
+    bmp2rb_native="$rootdir/tools/bmp2rb -f 4"
+    tool="$rootdir/tools/scramble -add=fuz2"
+    output="rockbox.sansa"
+    bootoutput="bootloader-fuzev2.sansa"
+    appextra="recorder:gui"
+    plugins="yes"
+    swcodec="yes"
+    toolset=$scramblebitmaptools
+    t_cpu="arm"
+    t_manufacturer="as3525"
+    t_model="sansa-fuzev2"
+    ;;
 
    59|c200v2)
     target_id=55

@@ -29,7 +29,7 @@
 #if defined(SANSA_CLIP)
 #define USB_DETECT_PIN 6
 
-#elif defined(SANSA_FUZE) || defined(SANSA_E200V2)
+#elif defined(SANSA_FUZE) || defined(SANSA_E200V2) || defined(SANSA_FUZEV2)
 #define USB_DETECT_PIN 3
 
 #elif defined(SANSA_C200V2)

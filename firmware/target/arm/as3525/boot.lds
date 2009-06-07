@@ -11,7 +11,7 @@ No need for DRAM in our bootloader
 #define DRAMSIZE (MEMORYSIZE * 0x100000) - TTB_SIZE
 #define DRAMORIG 0x30000000
 */
-#ifdef SANSA_CLIPV2
+#if defined(SANSA_CLIPV2) || defined(SANSA_FUZE)
 #define IRAMORIG 0              /* in fact DRAM, but we don't care */
 #define IRAMSIZE (MEM*0x100000)
 #else

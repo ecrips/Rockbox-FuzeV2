@@ -189,7 +189,7 @@ static void sdram_init(void)
 /* 16 bits external bus, low power SDRAM, 16 Mbits = 2 Mbytes */
 #define MEMORY_MODEL 0x21
 
-#elif defined(SANSA_E200V2) || defined(SANSA_FUZE) || defined(SANSA_CLIPV2)
+#elif defined(SANSA_E200V2) || defined(SANSA_FUZE) || defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2)
 /* 16 bits external bus, high performance SDRAM, 64 Mbits = 8 Mbytes */
 #define MEMORY_MODEL 0x5
 
@@ -218,7 +218,7 @@ static void sdram_init(void)
 
 void system_init(void)
 {
-#ifndef SANSA_CLIPV2
+#if !(defined(SANSA_CLIPV2) || defined(SANSA_FUZEV2))
     unsigned int reset_loops = 640;
 
     CCU_SRC = 0x1fffff0
@@ -266,7 +266,7 @@ void system_init(void)
     CGU_PERI &= ~0x7f;      /* pclk 24 MHz */
     CGU_PERI |= ((CLK_DIV(AS3525_PLLA_FREQ, AS3525_PCLK_FREQ) - 1) << 2)
                 | 1; /* clk_in = PLLA */
-#endif /* SANSA_CLIPV2 */
+#endif /* SANSA_CLIPV2 || SANSA_FUZEV2 */
 
 #if 0 /* the GPIO clock is already enabled by the dualboot function */
     CGU_PERI |= CGU_GPIO_CLOCK_ENABLE;
