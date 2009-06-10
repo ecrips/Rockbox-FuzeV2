@@ -37,6 +37,8 @@
 
 #include "power.h"
 
+#include "ascodec-target.h"
+
 void morpion(void);
 int show_logo(void);
 void main(void) __attribute__((noreturn));
@@ -46,9 +48,18 @@ void main(void)
     int buffer_size;
     void(*kernel_entry)(void);
     int ret;
+    int delay;
 
-    system_init();
+    //system_init();
     kernel_init();
+    ascodec_init();
+    ascodec_write(AS3514_DCDC15, 0x10);
+    GPIOA_DIR |= (1<<4);
+    GPIOA_PIN(4) = (1<<4);
+    delay=0x5000000;
+    while(delay--);
+    power_off();
+    while(1) ;
 
 #ifdef SANSA_C200V2
     /* stop here */
